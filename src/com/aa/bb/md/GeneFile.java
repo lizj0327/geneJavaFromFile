@@ -36,7 +36,7 @@ public class GeneFile {
 			sb.append("package "+ mapFile.getPackageName()+semicolon()+changeDoubleLine()); //包名
 			sb.append(mapFile.getImports()+changeDoubleLine());  //导入包
 			sb.append(mapFile.getNote()+changeDoubleLine());//注释
-			sb.append(mapFile.getHeaders()+changeDoubleLine());//注解
+			sb.append(mapFile.getHeaders()+changeLine());//注解
 			sb.append("public class "+ mapFile.getSimpleJavaName()+" extends JpaEntity<Long> {"+changeDoubleLine());
 			for(MapField field:mapFile.getFields()) {
 				sb.append(tab()+field.getHeader()+changeLine());

@@ -24,7 +24,7 @@ public class MapField {
 	
 	String nameChn;//中文名称
 	
-	Integer length;//长度
+	String length;//长度
 	
 	boolean primaryKey = false;
 	
@@ -54,20 +54,19 @@ public class MapField {
 		Map<String,String> typeMap = new HashMap<>();
 		Map<String,String> enumMap = new HashMap<>();
 		nameMap.put("id", "@Id\r\n" + 
-				"    @GeneratedValue(strategy = GenerationType.IDENTITY)\r\n" + 
+				"    @GeneratedValue(strategy = GenerationType.AUTO)\r\n" + 
 				"    @Column(updatable = false, nullable = false)");
 		
-		typeMap.put("String", "@ApiModelProperty(value = \"%s\"%s)\r\n" + 
-				"	@Column(length = %d%s%s)\r\n" + 
-				"	@Length(max = %d, message = \"%s长度不能超过%d\")");
+		typeMap.put("String", "@Column(length = %s%s%s)\r\n" + 
+				"	@Length(max = %s, message = \"%s长度不能超过%s\")");
 		
-		typeMap.put("Long", "@ApiModelProperty(value = \"%s\")\r\n" + 
-				"    @Column");
-		typeMap.put("LocalDateTime", "@ApiModelProperty(value = \"%s\")\r\n" + 
-				"	@CreationTimestamp\r\n" + 
-				"	@Column(columnDefinition = \"timestamp(6) default null\", updatable = false)\r\n" + 
+		typeMap.put("Long", "@Column");
+		typeMap.put("BigDecimal", "@Column");
+		typeMap.put("Integer", "@Column");
+		typeMap.put("Boolean", "@Column");
+		typeMap.put("LocalDateTime", "@Column(columnDefinition = \"timestamp(6) default null\", updatable = false)\r\n" + 
 				"	@DateTimeFormat(pattern = ClockUtil.LOCAL_DATE_TIME_FORMATTER_PATTERN)\r\n" + 
-				"	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ClockUtil.LOCAL_DATE_TIME_FORMATTER_PATTERN, timezone = ClockUtil.DEFAULT_TIME_ZONE)\r\n");
+				"	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ClockUtil.LOCAL_DATE_TIME_FORMATTER_PATTERN, timezone = ClockUtil.DEFAULT_TIME_ZONE)");
 		
 		enumMap.put("enum", "@ApiModelProperty(value = \"%s\"%s)\r\n" + 
 				"	@Enumerated(EnumType.STRING)");
@@ -88,13 +87,18 @@ public class MapField {
 			template = headersTemplate.get("type").get(type);
 			if(!StringUtil.empty(template)) {
 				if(type.equals("String")) {
-					header = String.format(template, this.getNameChn(),this.getNullAble()?"":", required = true",
-							this.getLength(),nullAble?"":", nullable = true",this.getUnique()?", unique = true":"",
+					header = String.format(template, this.getLength(),nullAble?"":", nullable = false",this.getUnique()?", unique = true":"",
 							this.getLength(),this.getNameChn(),this.getLength());
 				}else if(type.equals("Long")) {
-					header = String.format(template, this.getNameChn());
+					header = template;
 				}else if(type.equals("LocalDateTime")) {
-					header = String.format(template, this.getNameChn());
+					header = template;
+				}else if(type.equals("BigDecimal")) {
+					header = template;
+				}else if(type.equals("Integer")) {
+					header = template;
+				}else {
+					header = template;
 				}
 			}
 		}
@@ -138,7 +142,7 @@ public class MapField {
 		this.name = name;
 	}
 
-	public Integer getLength() {
+	public String getLength() {
 		return length;
 	}
 
@@ -150,7 +154,7 @@ public class MapField {
 		this.nameJava = nameJava;
 	}
 
-	public void setLength(Integer length) {
+	public void setLength(String length) {
 		this.length = length;
 	}
 

@@ -114,14 +114,9 @@ public class MdFile extends MapFile{
 					"\r\n" + 
 					"import org.hibernate.validator.constraints.Length;\r\n" + 
 					"\r\n" + 
-					"import com.cqbxzc.go.member.dict.MemberLevelEnum;\r\n" + 
-					"import com.cqbxzc.go.member.dict.MemberSexEnum;\r\n" + 
-					"import com.cqbxzc.go.member.dict.MemberStatusEnum;\r\n" + 
 					"import com.fasterxml.jackson.annotation.JsonIdentityInfo;\r\n" + 
 					"import com.fasterxml.jackson.annotation.ObjectIdGenerators;\r\n" + 
 					"\r\n" + 
-					"import io.swagger.annotations.ApiModel;\r\n" + 
-					"import io.swagger.annotations.ApiModelProperty;\r\n" + 
 					"import live.jialing.data.domain.JpaEntity;\r\n" + 
 					"import lombok.AllArgsConstructor;\r\n" + 
 					"import lombok.Builder;\r\n" + 
@@ -151,15 +146,14 @@ public class MdFile extends MapFile{
 	
 	public void setHeaders() {
 		if(StringUtil.empty(headers) && !StringUtil.empty(javaName) && !StringUtil.empty(tableName)) {
-			headers = "@ApiModel(value = \"%s\", description = \"%s\")\r\n" + 
-					"@Data\r\n" + 
+			headers = "@Data\r\n" + 
 					"@AllArgsConstructor\r\n" + 
 					"@NoArgsConstructor\r\n" + 
 					"@Builder(toBuilder = true)\r\n" + 
 					"@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = \"id\", scope = %s.class)\r\n" + 
 					"@Entity\r\n" + 
 					"@Table(name = \"%s\")";
-			headers = String.format(headers, javaName,tableNote,simpleJavaName,tableName);
+			headers = String.format(headers, simpleJavaName,tableName);
 		}
 	}
 	
@@ -182,11 +176,11 @@ public class MdFile extends MapFile{
 			return;
 		}
 		MapField f = new MapField();
-		f.setNameChn(fields[1]);
-		f.setName(fields[2]);
+		f.setNameChn(fields[1].trim());
+		f.setName(fields[2].trim());
 		f.setNameJava(setJavaField(f.getName()));
 		if(!StringUtil.empty(fields[3])) {
-			String type = fields[3].toLowerCase();
+			String type = fields[3].toLowerCase().trim();
 			System.out.println("table="+tableName+",field="+f.getName());
 			String type1 = MapEnum.getEnumType(tableName, f.getName());
 			if(StringUtil.empty(type1)) {
@@ -198,6 +192,12 @@ public class MdFile extends MapFile{
 					type = "Long";
 				} else if(type.equals("timestamp")){
 					type = "LocalDateTime";
+				} else if(type.equals("decimal")){
+					type = "BigDecimal";
+				} else if(type.equals("int")){
+					type = "Integer";
+				} else if(type.equals("bit")){
+					type = "Boolean";
 				}
 			}else {
 				type = type1;
@@ -206,7 +206,7 @@ public class MdFile extends MapFile{
 			f.setType(type);
 		}
 		if(!StringUtil.empty(fields[4])) {
-			f.setLength(Integer.valueOf(fields[4]));
+			f.setLength(String.valueOf(fields[4]));
 		}
 		if(!StringUtil.empty(fields[5]) && fields[5].equals("是")) {
 			f.setPrimaryKey(true);

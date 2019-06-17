@@ -13,9 +13,9 @@ public class ReadFile {
 
 	public static void main(String[] args) {
 		// 生成文件后存放的地址
-		String destPath = "D:\\workspace-benyou1\\ottgs\\components\\deployer\\src\\main\\java\\com\\aa\\bb\\md";
+		String destPath = "D:\\workspace-benyou1\\geneJavaFromFile\\src\\com\\aa\\bb\\files";
 		// .md文件存放的地址
-		String sourcePath = "D:\\workspace-benyou1\\wiki\\数据库物理设计\\会员\\";
+		String sourcePath = "D:\\workspace-benyou1\\wiki\\数据库物理设计\\出行\\行程\\电子票.md";
 		File file = new File(sourcePath);
 		readFiles(file,destPath);
 	}
